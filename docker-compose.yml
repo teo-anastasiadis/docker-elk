@@ -75,7 +75,7 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
     ports:
       - 5044:5044
-      - 50001:50001
+      - 50001:50001 # http
       - 50000:50000/tcp
       - 50000:50000/udp
       - 9600:9600
