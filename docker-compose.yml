@@ -75,6 +75,7 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
     ports:
       - 5044:5044
+      - 50001:50001
       - 50000:50000/tcp
       - 50000:50000/udp
       - 9600:9600
@@ -98,6 +99,21 @@ services:
       - 5601:5601
     environment:
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  curator:
+    build:
+      context: curator/
+    init: true
+    volumes:
+      - ./curator/config/curator.yml:/.curator/curator.yml:ro,Z
+      - ./curator/config/delete_log_files_curator.yml:/.curator/delete_log_files_curator.yml:ro,Z
+    environment:
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
     networks:
       - elk
     depends_on:
